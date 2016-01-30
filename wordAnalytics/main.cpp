@@ -23,17 +23,17 @@ int main(void) {
 	std::string word_list[9];		//入力された単語の配列
 
 	//メッセージ出力
-	std::cout << "文字列を入力してください（最大１０個）\n終了する場合は\"EXIT\"を入力\n";
+	std::cout << "言葉を入力してください（最大１０個）\n終了する場合は\"EXIT\"を入力\n※単語が重複しないようご注意ください\n\n";
 
 	//単語入力処理
-	while (counter1 <= 10 && tempstring != "EXIT") {
+	while (counter1 <= 10 && tempstring != "EXIT" && tempstring != "exit") {
 
 		counter1++;	//入力された個数
 
 		std::cout << counter1 << ':';
 		std::getline(std::cin, tempstring);
 
-		if (tempstring != "EXIT") {
+		if (tempstring != "EXIT" && tempstring != "exit") {
 			word_list[counter1 - 1] = tempstring;
 		}
 		else {
@@ -42,7 +42,7 @@ int main(void) {
 	}
 
 	//入力された単語を画面に出力
-	std::cout << "入力された単語\n";
+	std::cout << "入力された言葉\n";
 
 	for (int i = 1; i <= counter1; i++) {
 		std::cout << word_list[i - 1] << " ";
@@ -129,13 +129,7 @@ int main(void) {
 		score_array[wordnumber2][wordnumber1] = score1;
 	}
 
-	//マトリクス出力
-	for (int i = 0; i < counter1; i++) {
-		for (int j = 0; j < counter1; j++) {
-			std::cout << score_array[i][j];
-		}
-		std::cout << "\n";
-	}
+	refresh_console();	//画面をクリアする
 
 	///////////////////////////////////////////////////////////////////////
 	//	スコア合計が閾値以下の単語を削除する
@@ -172,7 +166,6 @@ int main(void) {
 	//	Rのスクリプトファイルを作成
 	///////////////////////////////////////////////////////////////////////
 	std::string r_script_fullpath = create_r_script();
-	std::cout << r_script_fullpath << "\n";
 
 	///////////////////////////////////////////////////////////////////////
 	//	rscript.exeの場所を選択
@@ -187,7 +180,16 @@ int main(void) {
 	///////////////////////////////////////////////////////////////////////
 	//	バッチファイル実行
 	///////////////////////////////////////////////////////////////////////
+	std::cout << "対応分析開始";
 	command_execute(batch_path);
+	std::cout << "対応分析終了\n";
+
+	///////////////////////////////////////////////////////////////////////
+	//	終了用メッセージを出力
+	///////////////////////////////////////////////////////////////////////
+	std::cout << "-------------------------------------------------------------------------------------\n";
+	std::cout << "入力された言葉の座標値を\"" << tmpdir1 << sep << correspondence_result_filename << "\"に出力しました\n";
+	std::cout << "Excel等で散布図を作成してください\n";
 
 	///////////////////////////////////////////////////////////////////////
 	//	後処理
@@ -274,7 +276,7 @@ std::string create_r_script(void) {
 	out_file << "columns1[2] <- \"Y\"" << "\n";
 	out_file << "dimnames(F) <- list(colnames(table.N), columns1)" << "\n";
 	out_file << "dimnames(G) <- list(colnames(table.N), columns1)" << "\n";
-	out_file << "write.table(F[ , c(1, 2)], \"../" << resultdir1 << "/CorrespondenceAnalysis_result.csv\", sep=\",\",col.names=NA)" << "\n";
+	out_file << "write.table(F[ , c(1, 2)], \"../" << resultdir1 << "/" << correspondence_result_filename << "\", sep=\",\",col.names=NA)" << "\n";
 	//out_file << "write.table(F[ , c(1, 2)], \"../" << resultdir1 << "/vertical.csv\", sep=\",\",col.names=NA)" << "\n";
 	//out_file << "write.table(G[ , c(1, 2)], \"../" << resultdir1 << "/holizontal.csv\", sep=\",\",col.names=NA)" << "\n";
 	out_file << "write.table(S.svd$d, \"singular.csv\", sep=\",\")" << "\n";

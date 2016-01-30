@@ -9,6 +9,7 @@ const int maxword_count = 10;																//単語の最大数#pragma once
 const std::string tmpdir1 = "temp";															//一時フォルダ名
 const std::string resultdir1 = "result";													//結果ファイルのフォルダ名
 const std::string csvfilename1 = "output.csv";												//スコアマトリクスのファイル名
+const std::string correspondence_result_filename = "CorrespondenceAnalysis_result.csv";		//対応分析結果の出力ファイル名
 
 //windows用定数
 const std::string rscript = "Rscript.exe";													//Rスクリプトの実行ファイル名
