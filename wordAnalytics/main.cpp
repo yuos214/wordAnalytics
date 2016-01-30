@@ -20,9 +20,12 @@ int main(void) {
 	/////////////////////////////////////////////////////////////
 	int counter1 = 0;
 	std::string tempstring = "";	//単語入力用一時変数
-	std::string word_list[9];	//入力された単語の配列
+	std::string word_list[9];		//入力された単語の配列
 
+	//メッセージ出力
 	std::cout << "文字列を入力してください（最大１０個）\n終了する場合は\"EXIT\"を入力\n";
+
+	//単語入力処理
 	while (counter1 <= 10 && tempstring != "EXIT") {
 
 		counter1++;	//入力された個数
@@ -38,6 +41,7 @@ int main(void) {
 		}
 	}
 
+	//入力された単語を画面に出力
 	std::cout << "入力された単語\n";
 
 	for (int i = 1; i <= counter1; i++) {
@@ -49,11 +53,11 @@ int main(void) {
 	////////////////////////////////////////////////////////////
 	//		質問準備
 	////////////////////////////////////////////////////////////
-	int *numberarray1 = new int[counter1 * counter1 - 1];//組み合わせ番号の１つ目
-	int *numberarray2 = new int[counter1 * counter1 - 1];//組み合わせ番号の２つ目
+	int *numberarray1 = new int[counter1 * counter1 - 1];	//組み合わせ番号の１つ目
+	int *numberarray2 = new int[counter1 * counter1 - 1];	//組み合わせ番号の２つ目
 
-														 //動的な２次元配列を作成
-														 //スコア記録用２次元配列
+	 //動的な２次元配列を作成
+	 //スコア記録用２次元配列
 	int **score_array = new int*[counter1 - 1];
 	for (int i = 0; i < counter1; i++) {
 		score_array[i] = new int[counter1 - 1];
@@ -80,12 +84,14 @@ int main(void) {
 	int wordnumber1;
 	int wordnumber2;
 
-	//スコア
-	int score1;
-
 	////////////////////////////////////////////////////////////////////////
 	//ランダムに組み合わせを表示して関係性を質問する
 	////////////////////////////////////////////////////////////////////////
+
+	//スコア
+	int score1;
+
+	//総当たりで２つづず単語を表示し、関係性を入力してもらう
 	for (int i = 0; i < counter1 * counter1; i++) {
 
 		int tmpnumber1;//乱数配列から取得した乱数
@@ -97,18 +103,28 @@ int main(void) {
 
 		if (wordnumber1 != wordnumber2) {
 			if (-1 != score_array[wordnumber1][wordnumber2]) {
-				system("cls");
+				
+				refresh_console();	//画面をクリアする
+
+				//２つの単語を表示する
 				std::cout << "\n     " << word_list[wordnumber1] << "     " << word_list[wordnumber2] << "\n\n";
 				std::cout << "  0 : 関係ない\n  1 : 少し関係ある\n  2 : とても関係がある\n\n番号を入力:";
+
+				//ユーザーに数値を入力してもらう
 				std::cin >> score1;
-				assert(2 >= score1);
-				assert(0 <= score1);
+
+				//入力チェック
+				while (2 < score1 || 0 > score1) {
+					std::cout << "0,1,2のどれかを入力してください\n番号を入力:";
+					std::cin >> score1;
+				}
 			}
 		}
 		else {
 			//同じ単語の場合は交差部のスコアを入れる
 			score1 = intersectpoint1;
 		}
+		//スコアをスコア配列に入れる
 		score_array[wordnumber1][wordnumber2] = score1;
 		score_array[wordnumber2][wordnumber1] = score1;
 	}
